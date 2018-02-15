@@ -2,8 +2,10 @@ package com.udacity.sandwichclub;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -14,7 +16,6 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,7 @@ public class DetailActivity extends AppCompatActivity {
             return;
         }
 
-        populateUI();
+        populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
@@ -56,7 +57,32 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 
-    private void populateUI() {
+    private void populateUI(Sandwich sandwich) {
+        // textviews for Sandwich details
+        TextView originTv = findViewById(R.id.origin_tv);
+        originTv.setText(sandwich.getPlaceOfOrigin());
+
+        TextView alsoKnownAsTv = findViewById(R.id.also_known_tv);
+
+        // multiple line for multiple names
+        StringBuilder sb = new StringBuilder();
+        for (String name : sandwich.getAlsoKnownAs()) {
+            if (sb.length() != 0) sb.append('\n');
+            sb.append(name);
+        }
+        alsoKnownAsTv.setText(sb.toString());
+
+        TextView descriptionTv = findViewById(R.id.description_tv);
+        descriptionTv.setText(sandwich.getDescription());
+
+        TextView ingredientsTv = findViewById(R.id.ingredients_tv);
+        // multiple line for multiple ingredients
+        sb.setLength(0);
+        for (String name : sandwich.getIngredients()) {
+            if (sb.length() != 0) sb.append('\n');
+            sb.append(name);
+        }
+        ingredientsTv.setText(sb.toString());
 
     }
 }
